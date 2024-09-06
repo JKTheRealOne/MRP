@@ -1,0 +1,145 @@
+﻿@model WebApplication.Models.SpecificationModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<style>
+    ul.tree {
+        list-style-type: none;
+        position: relative;
+    }
+
+    ._active {
+        background-color: lightgrey;
+    }
+
+    ._state {
+        position: absolute;
+        left: 1em;
+    }
+
+    ._collapse > ._state::after {
+        content: '+';
+    }
+
+    ._expand > ._state::after {
+        content: '-';
+    }
+
+    ._collapse > ul {
+        display: none;
+    }
+
+    ._expand > ul {
+        display: block;
+    }
+
+    .item {
+        cursor: pointer;
+    }
+</style>
+
+<div>
+    <h4>SpecificationModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ParentId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ParentId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CountForParent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CountForParent)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MeasureUnit)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MeasureUnit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Childrens)
+        </dt>
+        <dd class="col-sm-10">
+            <div id="tree"></div>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function createTree(data, parentId) {
+        console.log(data);
+        parentId = parentId || 0;
+        var items = data.filter(function (el) {
+            return el.ParentId == parentId;
+        });
+
+        if (items.length == 0) return null;
+
+        var tree = $('<ul>').addClass('tree');
+        tree.append(
+            items.map(
+                function (el) {
+                    var li = $('<li>').append(
+                        $('<div>').addClass('_state')
+                    ).append(
+                        $('<div>').html(el.Name + " &mdash; " + el.CountForParent + el.MeasureUnit).attr('id', el.Id).addClass('item')
+                    ),
+                        nestedTree = createTree(data, el.Id);
+
+                    if (nestedTree !== null) {
+                        li.append(nestedTree)
+                            .addClass('_collapse')
+                    }
+                    return li;
+                }
+            )
+        );
+        return tree;
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "@Url.Action("GetChildren", "SpecificationModels")",
+            data: { id: @Model.Id },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var tree = createTree(data, @Model.Id)
+                $('#tree').append(tree)
+                    .on('click', '.item', function () {
+                        //$('._active').not(this).removeClass('_active');
+                        $(this).parent().toggleClass('_collapse _expand');
+                    })
+                    .on('click', '._state', function () {
+                        $(this).parent().toggleClass('_collapse _expand');
+                    })
+            },
+            error: function (reponse) {
+                console.log(reponse);
+            }
+        });
+    });
+</script>

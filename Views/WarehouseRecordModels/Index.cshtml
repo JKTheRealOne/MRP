@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WebApplication.Models.WarehouseRecordModel>
+
+@{
+    ViewData["Title"] = "Склад";
+}
+
+<h1>Склад</h1>
+
+<p>
+    <a asp-action="Create">Добавить запись</a>
+    <a asp-action="Calculate">Расчет позиций на складе</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RecordType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.MeasureUnit)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.SpecificationModel)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecordType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity) @Html.DisplayFor(modelItem => item.SpecificationModel.MeasureUnit)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.MeasureUnit)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.SpecificationModel.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

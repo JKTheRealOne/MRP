@@ -1,0 +1,71 @@
+﻿@model WebApplication.Models.OrderModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SpecificationModelId" class="control-label"></label>
+                @*<select asp-for="SpecificationModelId" class="form-control" asp-items="ViewBag.SpecificationModelId"></select>*@
+                <select asp-for="SpecificationModelId" class="form-control" asp-items="ViewBag.SpecificationModelId" onchange="ChangeLabel()"></select>
+                <span asp-validation-for="SpecificationModelId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderDateDeadline" class="control-label"></label>
+                <input asp-for="OrderDateDeadline" class="form-control" />
+                <span asp-validation-for="OrderDateDeadline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select class="form-control form-select" asp-for="Status" asp-items="ViewBag.OrderStatus"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClientName" class="control-label"></label>
+                <input asp-for="ClientName" class="form-control" />
+                <span asp-validation-for="ClientName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="MeasureUnit" class="control-label"></label>
+                <input asp-for="MeasureUnit" class="form-control" />
+                <span asp-validation-for="MeasureUnit" class="text-danger"></span>
+            </div>*@
+            <select id="txtMeasureUnit" class="form-control disabled" asp-items="ViewBag.MeasureUnits" disabled></select>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        function ChangeLabel() {
+            var specificationId = $('#SpecificationModelId').val();
+            $('#txtMeasureUnit').val(specificationId);
+        }
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

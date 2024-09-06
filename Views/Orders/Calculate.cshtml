@@ -1,0 +1,41 @@
+﻿@model IEnumerable<WebApplication.Models.OrderModel>
+
+@{
+    ViewData["Title"] = "Расчет недостающих товаров";
+}
+
+<h1>Расчет недостающих товаров</h1>
+
+@using (Html.BeginForm())
+{
+    <p>
+        @*Start date: <input type="date" name="StartDate" value="@ViewBag.StartDate" /> |*@
+        Дата выполнения: <input type="date" name="EndDate" value="@ViewBag.EndDate" />
+        <input type="submit" value="Поиск" /></p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SpecificationModel.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SpecificationModel.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity) @Html.DisplayFor(modelItem => item.SpecificationModel.MeasureUnit)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
